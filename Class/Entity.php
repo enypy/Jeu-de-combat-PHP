@@ -9,7 +9,9 @@ abstract class Entity
 
     protected int $id;
     protected int $health;
+    protected const MAX_HP = 0;
     protected int $energy;
+    protected const MAX_ENERGY = 0;
     protected int $hitChance;
     protected int $damage;
     protected int $defence;
@@ -18,21 +20,19 @@ abstract class Entity
     protected const ENTITY_CLASS = '';
     protected const ENTITY_SUBCLASS = '';
     protected const ENTITY_TYPE = '';
-    protected const MAX_HP = 0;
-    protected const MAX_ENERGY = 0;
-    protected const DAMAGE_TYPE = 'physical';
+    protected const HIT_DAMAGE_TYPE = 'physical';
+    protected const HIT_DISTANCE = 'melee';
     protected const HIT_MAX_DMG = 0;
     protected const HIT_MIN_DMG = 0;
+    protected const HIT_COST = 0;
     protected const SPECIAL_ABILITY_NAME = '';
     protected const SPECIAL_ABILITY_COST = 0;
     protected const PASSIVE_ABILITY_NAME = '';
     protected const PASSIVE_ABILITY_DESCRIPTION = '';
     protected const PASSIVE_ABILITY_TRIGGER_CHANCE = 0;
-
-
-
-
-    protected array $state = [
+    protected const WORST_ENEMY = '';
+    protected const WORST_ENEMY_DAMAGE_MULTIPLIER = 1;
+    protected array $effect = [
         'distracted' => 0,
         'slowed' => 0,
         'stunned' => 0,
@@ -140,22 +140,43 @@ abstract class Entity
         return $this->lifesteal;
     }
 
-    public function gainEnergy(int $energy): void
+    public function gainEnergy(int $energy): int
     {
+        $energyBeforeGain = $this->energy;
         $energy = $this->energy += $energy;
         $this->energy = min($this::MAX_ENERGY, $energy);
+        $currentEnergy = $this->getEnergy();
+        $energyGained = $currentEnergy - $energyBeforeGain;
+        return $energyGained;
     }
 
-    public function gainHealth(int $health): void
+    public function tryLoseEnergy(int $energy): bool
     {
+        $currentEnergy = $this->getEnergy();
+
+        if ($energy > $currentEnergy) {
+            return false;
+        } else {
+            $energy = $this->energy -= $energy;
+            $this->energy = max(0, $energy);
+            return true;
+        }
+    }
+
+    public function heal(int $health): int
+    {
+        $healthBeforeGain = $this->health;
         $health = $this->health += $health;
         $this->health = min($this::MAX_HP, $health);
+        $currentHealth = $this->getHealth();
+        $healthGained = $currentHealth - $healthBeforeGain;
+        return $healthGained;
     }
 
-    public function loseEnergy(int $energy): void
+    public function takeDamage(int $health): void
     {
-        $energy = $this->energy -= $energy;
-        $this->energy = max(0, $energy);
+        $health = $this->health += $health;
+        $this->health = max(0, $health);
     }
 
     public function gainDefence(int $defence): void
@@ -246,27 +267,46 @@ abstract class Entity
         return $this::HIT_MIN_DMG;
     }
 
-    public function getDamageType(): string
+    public function getHitDamageType(): string
     {
-        return $this::DAMAGE_TYPE;
+        return $this::HIT_DAMAGE_TYPE;
     }
 
-    public function setState(string $stateName, int $rounds): void
+    public function getHitDistance(): string
     {
-        $this->state[$stateName] = $rounds;
+        return $this::HIT_DISTANCE;
+    }
+
+    public function getHitCost(): int
+    {
+        return $this::HIT_COST;
+    }
+
+    public function getWorstEnemy(): string
+    {
+        return $this::WORST_ENEMY;
+    }
+
+    public function getWorstEnemyDamageMultiplier(): string
+    {
+        return $this::WORST_ENEMY_DAMAGE_MULTIPLIER;
+    }
+    public function setEffect(string $effectName, int $rounds): void
+    {
+        $this->effect[$effectName] = $rounds;
     }
 
 
-    public function stateCountdown(): void
+    public function effectCountdown(): void
     {
-        foreach ($this->state as $key => $value) {
-            $this->state[$key] = max(0, --$value);
+        foreach ($this->effect as $key => $value) {
+            $this->effect[$key] = max(0, --$value);
         }
     }
 
-    public function hitOrMiss(Entity $entity): bool
+    protected function hitOrMiss(Entity $entity): bool
     {
-        $damageType = $this->getDamageType();
+        $damageType = $this->getHitDamageType();
         if ($damageType !== 'magical') {
             $hitChance = $this->getHitChance();
             $agility = $entity->getAgility();
@@ -286,10 +326,10 @@ abstract class Entity
         }
     }
 
-    public function blockDamage(int $incomingDamage): int
+    protected function blockDamage(int $incomingDamage): int
     {
-        $damageType = $this->getDamageType();
-        if ($damageType !== 'magical') {
+        $hitDistance = $this->getHitDistance();
+        if ($hitDistance !== 'ranged') {
             $defence = $this->getDefence();
             $damageReductionPercent = $defence / 10;
             $damage = floor($incomingDamage - ($incomingDamage * ($damageReductionPercent / 100)));
@@ -299,7 +339,7 @@ abstract class Entity
         }
     }
 
-    public function triggerOnHit(): bool
+    protected function triggerOnHit(): bool
     {
         $triggerChance = $this->getPassiveAbilityTriggerChance();
         $rand = rand(0, 100);
@@ -311,11 +351,84 @@ abstract class Entity
         }
     }
 
-    public function hit(Entity $entity): array
+    protected function triggerWhenStruck(): bool
     {
+        $triggerChance = $this->getPassiveAbilityTriggerChance();
+        $rand = rand(0, 100);
+
+        if ($rand > $triggerChance) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected function calculateDamage(Entity $entity): int
+    {
+        $worstEnemy = $this->getWorstEnemy();
+        $enemyClass = $entity->getClass();
         $maxDamage = $this->getHitMaxDamage();
         $minDamage = $this->getHitMinDamage();
         $damage = rand($minDamage, $maxDamage);
+
+        if ($worstEnemy === $enemyClass) {
+            $damageMultiplier = $this->getWorstEnemyDamageMultiplier();
+            $damage = ceil($damage * $damageMultiplier);
+        }
+
+        return $damage;
+    }
+
+    protected function stealLife(int $damage): int
+    {
+        $lifeSteal = $this->getLifesteal();
+        $heal = ceil($damage - ($damage * ($lifeSteal / 10) / 100));
+        $healed = $this->heal($heal);
+
+        return  $healed;
+    }
+
+    public function hit(Entity $entity): array
+    {
+        $struckHpBeforeHit = $entity->getHealth();
+        $hitEnergyCost = $this->getHitCost();
+        $tryLoseEnergy = $this->tryLoseEnergy($hitEnergyCost);
+        $damage = $this->calculateDamage($entity);
+        $hitOrMiss = $this->hitOrMiss($entity);
+        $damageAfterBlocking = $this->blockDamage($damage);
+        $strikerPassiveAbilityTriggered = $this->triggerOnHit();
+        $struckPassiveAbilityTriggered = $entity->triggerWhenStruck();
+        $damageBlocked = $damage - $damageAfterBlocking;
+        $hitSuccess = false;
+
+        if ($tryLoseEnergy && $hitOrMiss) {
+            $entity->takeDamage($damageAfterBlocking);
+            $hitSuccess = true;
+            $lifesteal = $this->stealLife($damageAfterBlocking);
+        }
+
+
+        $hitResult = [
+            'striker' => $this->getName(),
+            'strikerClass' => $this->getClass(),
+            'strikerSubclass' => $this->getSubclass(),
+            'strikerPassiveAbility' => $strikerPassiveAbilityTriggered,
+            'struck' => $entity->getName(),
+            'struckClass' => $entity->getClass(),
+            'struckSubclass' => $entity->getSubclass(),
+            'struckHpBeforeHit' => $struckHpBeforeHit,
+            'struckCurrentHp' => $entity->getHealth(),
+            'struckPassiveAbility' => $struckPassiveAbilityTriggered,
+            'damageDone' => $damageAfterBlocking,
+            'damageBlocked' => $damageBlocked,
+            'hit' => $hitOrMiss,
+            'hitEnergyCost' => $hitEnergyCost,
+            'enoughEnergy' => $tryLoseEnergy,
+            'hitSuccess' => $hitSuccess,
+            'lifesteal' => $lifesteal,
+        ];
+
+        return $hitResult;
     }
 
     abstract function specialAbility(): array;
