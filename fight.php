@@ -1,4 +1,8 @@
 <?php
+if (!isset($_POST['id'])) {
+    header('Location: index.php');
+    exit();
+}
 include __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'autoload.php';
 include __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.php';
 
