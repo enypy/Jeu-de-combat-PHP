@@ -17,10 +17,11 @@ use Class\Hero;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WOW 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 
 <body>
-<button onclick="location.href='leaderboard.php';">Leaderboard</button>
+    <button onclick="location.href='leaderboard.php';">Leaderboard</button>
 
     <?php
     $heroesManager = new HeroesManager($db);
@@ -55,10 +56,44 @@ use Class\Hero;
             </form>
         HTML;
     }
+    ?>
+    <div class="card-group">
+        <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
 
-    foreach ($heroesManager->findAllAlive() as $hero) {
-        echo <<<HTML
-            <form action="fight.php" method="POST">
+
+        <?php
+        foreach ($heroesManager->findAllAlive() as $hero) {
+            echo <<<HTML
+            <div class="card">
+            <div class="card-header"><h5 class="card-title">{$hero['name']} <small>({$hero['class']})</small></h5></div>
+            <img src="..." class="card-img-top" alt="...">
+
+            <div class="card-body">
+            <h5 class="card-title">{$hero['name']} ({$hero['class']})</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+            <form action="fight.php" method="POST" class="text-center">
+            <input type="number" name="id" value="{$hero['id']}" hidden>
+                <input type="submit" class="btn btn-primary" value="SELECT">
+                </form>
+            </div>
+            </div>
+            <form action="fight.php" method="POST" class="text-center">
                 <div>
                     <p>Name: {$hero['name']} ({$hero['class']}) </p>
                 </div>
@@ -66,13 +101,14 @@ use Class\Hero;
                     <p>Health: {$hero['health_point']}</p> 
                 </div>
                 <input type="number" name="id" value="{$hero['id']}" hidden>
-                <input type="submit" value="select">
+                <input type="submit" class="btn btn-primary" value="select">
             </form>
         HTML;
-    }
+        }
 
-    ?>
-
+        ?>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 
 </html>
