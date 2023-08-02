@@ -29,6 +29,7 @@ abstract class Entity
     protected const SPECIAL_ABILITY_COST = 0;
     protected const PASSIVE_ABILITY_NAME = '';
     protected const PASSIVE_ABILITY_DESCRIPTION = '';
+    protected const PASSIVE_ABILITY_TRIGGER_TYPE = 'on hit';
     protected const PASSIVE_ABILITY_TRIGGER_CHANCE = 0;
     protected const WORST_ENEMY = '';
     protected const WORST_ENEMY_DAMAGE_MULTIPLIER = 1;
@@ -42,6 +43,15 @@ abstract class Entity
 
     ];
 
+//     renvoi dégats
+// absorber dégats
+// lifesteal
+// doubledamage
+// berserk
+// greatermanaregen
+// stun on hit
+// energysteal
+// dot
 
     public function __construct(
         private string $name,
@@ -291,6 +301,12 @@ abstract class Entity
     {
         return $this::WORST_ENEMY_DAMAGE_MULTIPLIER;
     }
+
+    public function getPassiveAbilityTriggerType(): string
+    {
+        return $this::PASSIVE_ABILITY_TRIGGER_TYPE;
+    }
+
     public function setEffect(string $effectName, int $rounds): void
     {
         $this->effect[$effectName] = $rounds;
@@ -341,25 +357,35 @@ abstract class Entity
 
     protected function triggerOnHit(): bool
     {
-        $triggerChance = $this->getPassiveAbilityTriggerChance();
-        $rand = rand(0, 100);
+        $triggerType = $this->getPassiveAbilityTriggerType();
+        if ($triggerType === 'on hit') {
+            $triggerChance = $this->getPassiveAbilityTriggerChance();
+            $rand = rand(0, 100);
 
-        if ($rand > $triggerChance) {
-            return false;
+            if ($rand > $triggerChance) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
     }
 
-    protected function triggerWhenStruck(): bool
+    protected function triggerWhenStruck(Entity $entity): bool
     {
-        $triggerChance = $this->getPassiveAbilityTriggerChance();
-        $rand = rand(0, 100);
+        $triggerType = $entity->getPassiveAbilityTriggerType();
+        if ($triggerType === 'when struck') {
+            $triggerChance = $this->getPassiveAbilityTriggerChance();
+            $rand = rand(0, 100);
 
-        if ($rand > $triggerChance) {
-            return false;
+            if ($rand > $triggerChance) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
     }
 
@@ -379,7 +405,7 @@ abstract class Entity
         return $damage;
     }
 
-    protected function stealLife(int $damage): int
+    protected function lifesteal(int $damage): int
     {
         $lifeSteal = $this->getLifesteal();
         $heal = ceil($damage - ($damage * ($lifeSteal / 10) / 100));
@@ -397,14 +423,14 @@ abstract class Entity
         $hitOrMiss = $this->hitOrMiss($entity);
         $damageAfterBlocking = $this->blockDamage($damage);
         $strikerPassiveAbilityTriggered = $this->triggerOnHit();
-        $struckPassiveAbilityTriggered = $entity->triggerWhenStruck();
+        $struckPassiveAbilityTriggered = $entity->triggerWhenStruck($entity);
         $damageBlocked = $damage - $damageAfterBlocking;
         $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $entity->takeDamage($damageAfterBlocking);
             $hitSuccess = true;
-            $lifesteal = $this->stealLife($damageAfterBlocking);
+            $lifesteal = $this->lifesteal($damageAfterBlocking);
         }
 
 
