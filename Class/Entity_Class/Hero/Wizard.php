@@ -20,10 +20,10 @@ abstract class Wizard extends Hero
         $finalDamage = $enemy->takeDamage($damage);
         $summary = [
             'actionType' => 'passive ability',
+            'actionName' => $me->getPassiveAbilityName(),
             'enemyName' => $enemy->getName(),
             'myName' => $me->getName(),
             'effectTarget' => $enemy->getName(),
-            'abilityName' => $me->getPassiveAbilityName(),
             'meHeal' => 0,
             'meDamage' => 0,
             'meEnergyLoss'=> 0,

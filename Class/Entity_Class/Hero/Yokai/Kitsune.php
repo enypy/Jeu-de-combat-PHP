@@ -12,15 +12,15 @@ class Kitsune extends Yokai
     protected int $energy = 200;
     protected const MAX_ENERGY = 200;
     protected int $hitChance = 100;
-    protected int $maxHitChance;
+    protected int $maxHitChance = 100;
     protected int $attack = 34;
-    protected int $maxAttack;
+    protected int $maxAttack = 34;
     protected int $defence = 22;
-    protected int $maxDefence;
+    protected int $maxDefence = 22;
     protected int $agility = 15;
-    protected int $maxAgility;
+    protected int $maxAgility = 15;
     protected int $lifesteal = 29;
-    protected int $maxLifesteal;
+    protected int $maxLifesteal = 29;
     protected const ENTITY_SUBCLASS = 'Kitsune';
     protected const HIT_DAMAGE_TYPE = 'magical';
     protected const HIT_DISTANCE = 'ranged';
@@ -30,6 +30,7 @@ class Kitsune extends Yokai
     protected const SPECIAL_ABILITY_NAME = 'Azure Inferno';
     protected const SPECIAL_ABILITY_DESCRIPTION = 'Harness the arcane energies to conjure a massive orb of blue fire, crackling with intense magical power. With a sweeping motion, you propel the blazing sphere towards your target from a distance, leaving a trail of sparks and embers in its wake. Upon impact, the sphere erupts in a spectacular explosion, engulfing everything in its vicinity in a brilliant azure inferno. The searing flames scorch and sear, leaving a trail of devastation in their wake.';
     protected const SPECIAL_ABILITY_COST = 160;
+
 
     public function specialAbility(Entity $entity): array
     {
@@ -60,6 +61,7 @@ class Kitsune extends Yokai
 
         $hitResult = [
             'actionType' => 'special ability',
+            'actionName' => $this->getSpecialAbilityName(),
             'striker' => $this->getName(),
             'strikerClass' => $this->getClass(),
             'strikerSubclass' => $this->getSubclass(),
@@ -75,6 +77,8 @@ class Kitsune extends Yokai
             'struckPassiveAbility' => $struckPassiveAbilityTriggered,
             'damageDone' => $damageDone,
             'damageBlocked' => $damageBlocked,
+            'effectName' => false,
+            'effectTarget' => false,
             'hit' => $hitOrMiss,
             'hitEnergyCost' => $hitEnergyCost,
             'enoughEnergy' => $tryLoseEnergy,

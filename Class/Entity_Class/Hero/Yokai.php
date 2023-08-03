@@ -21,10 +21,10 @@ abstract class Yokai extends Hero
         $healed = $me->heal($damage);
         $summary = [
             'actionType' => 'passive ability',
+            'actionName' => $me->getPassiveAbilityName(),
             'enemyName' => $enemy->getName(),
             'myName' => $me->getName(),
             'effectTarget' => $me->getName(),
-            'abilityName' => $me->getPassiveAbilityName(),
             'meHeal' => $healed,
             'meDamage' => 0,
             'meEnergyLoss'=> 0,

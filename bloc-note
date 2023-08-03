@@ -7,5 +7,9 @@ greatermanaregen
 stun on hit
 energysteal
 dot
-
+'infected' => 0,
+        'dazed' => 0,
+        'disarmed' => 0,
+        'distracted' => 0,
+        'slowed' => 0,
 gestion des états

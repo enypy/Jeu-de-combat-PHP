@@ -31,6 +31,7 @@ class Yamabushi extends Yokai
     protected const SPECIAL_ABILITY_DESCRIPTION = 'Unleash a rapid flurry of short sword strikes, creating a whirlwind of blades that slice through enemies with lightning speed and precision. Each strike is executed with finesse and agility, making it difficult for foes to anticipate or block the onslaught.';
     protected const SPECIAL_ABILITY_COST = 60;
 
+
     public function specialAbility(Entity $entity): array
     {
 
@@ -45,6 +46,7 @@ class Yamabushi extends Yokai
         $damageBlocked = $damage - $damageAfterBlocking;
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
+        $effectSet = false;
         $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
@@ -60,6 +62,7 @@ class Yamabushi extends Yokai
 
         $hitResult = [
             'actionType' => 'special ability',
+            'actionName' => $this->getSpecialAbilityName(),
             'striker' => $this->getName(),
             'strikerClass' => $this->getClass(),
             'strikerSubclass' => $this->getSubclass(),
@@ -75,6 +78,8 @@ class Yamabushi extends Yokai
             'struckPassiveAbility' => $struckPassiveAbilityTriggered,
             'damageDone' => $damageDone,
             'damageBlocked' => $damageBlocked,
+            'effectName' => false,
+            'effectTarget' => false,
             'hit' => $hitOrMiss,
             'hitEnergyCost' => $hitEnergyCost,
             'enoughEnergy' => $tryLoseEnergy,

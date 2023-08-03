@@ -39,13 +39,8 @@ abstract class Entity
     protected const WORST_ENEMY = '';
     protected const WORST_ENEMY_DAMAGE_MULTIPLIER = 1;
     protected array $effect = [
-        'distracted' => 0,
-        'slowed' => 0,
         'stunned' => 0,
-        'infected' => 0,
-        'dazed' => 0,
-        'disarmed' => 0,
-
+        'bleeding' => 0,
     ];
 
 
@@ -474,12 +469,27 @@ abstract class Entity
         $this->effect[$effectName] = $rounds;
     }
 
-
-    public function effectCountdown(): void
+    public function effectCountdown(): array
     {
+        $activeEffects = [];
         foreach ($this->effect as $key => $value) {
+            if ($key > 0) {
+                $activeEffects[$value] = $key;
+                switch ($value) {
+                    case 'Bleeding':
+                        $this->takeDamage(150);
+                        $activeEffects['BleedingLogs'] = [
+                            
+                        ];
+                        break;
+
+                    default:
+                        break;
+                }
+            }
             $this->effect[$key] = max(0, --$value);
         }
+        return $activeEffects;
     }
 
     protected function hitOrMiss(Entity $entity): bool
@@ -609,6 +619,8 @@ abstract class Entity
             'struckPassiveAbility' => $struckPassiveAbilityTriggered,
             'damageDone' => $damageDone,
             'damageBlocked' => $damageBlocked,
+            'effectName' => false,
+            'effectTarget' => false,
             'hit' => $hitOrMiss,
             'hitEnergyCost' => $hitEnergyCost,
             'enoughEnergy' => $tryLoseEnergy,

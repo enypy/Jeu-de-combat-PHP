@@ -21,10 +21,10 @@ abstract class Samurai extends Hero
         $enemy->setEffect($effect, 1);
         $summary = [
             'actionType' => 'passive ability',
+            'actionName' => $me->getPassiveAbilityName(),
             'enemyName' => $enemy->getName(),
             'myName' => $me->getName(),
             'effectTarget' => $enemy->getName(),
-            'abilityName' => $me->getPassiveAbilityName(),
             'meHeal' => 0,
             'meDamage' => 0,
             'meEnergyLoss'=> 0,
