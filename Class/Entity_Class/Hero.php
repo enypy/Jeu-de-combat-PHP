@@ -6,7 +6,9 @@ use Class\Entity;
 
 abstract class Hero extends Entity
 {
+    protected const ENTITY_TYPE = 'Hero';
     protected int $lvl = 0;
+    protected int $maxLvl = 0;
     protected int $xp = 0;
     protected int $stage = 0;
 
