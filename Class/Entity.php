@@ -43,7 +43,7 @@ abstract class Entity
 
     ];
 
-//     renvoi dégats
+// renvoi dégats
 // absorber dégats
 // lifesteal
 // doubledamage
@@ -355,7 +355,7 @@ abstract class Entity
         }
     }
 
-    protected function triggerOnHit(): bool
+    protected function triggerOnHit(Entity $entity): mixed
     {
         $triggerType = $this->getPassiveAbilityTriggerType();
         if ($triggerType === 'on hit') {
@@ -365,14 +365,15 @@ abstract class Entity
             if ($rand > $triggerChance) {
                 return false;
             } else {
-                return true;
+                $passiveAbility = $this->specialAbility($this, $entity);
+                return $passiveAbility;
             }
         } else {
             return false;
         }
     }
 
-    protected function triggerWhenStruck(Entity $entity): bool
+    protected function triggerWhenStruck(Entity $entity): mixed
     {
         $triggerType = $entity->getPassiveAbilityTriggerType();
         if ($triggerType === 'when struck') {
@@ -382,7 +383,8 @@ abstract class Entity
             if ($rand > $triggerChance) {
                 return false;
             } else {
-                return true;
+                $passiveAbility = $entity->specialAbility($entity, $this);
+                return $passiveAbility;
             }
         } else {
             return false;
@@ -422,7 +424,7 @@ abstract class Entity
         $damage = $this->calculateDamage($entity);
         $hitOrMiss = $this->hitOrMiss($entity);
         $damageAfterBlocking = $this->blockDamage($damage);
-        $strikerPassiveAbilityTriggered = $this->triggerOnHit();
+        $strikerPassiveAbilityTriggered = $this->triggerOnHit($entity);
         $struckPassiveAbilityTriggered = $entity->triggerWhenStruck($entity);
         $damageBlocked = $damage - $damageAfterBlocking;
         $hitSuccess = false;
@@ -457,6 +459,6 @@ abstract class Entity
         return $hitResult;
     }
 
-    abstract function specialAbility(): array;
+    abstract function specialAbility(Entity $this, Entity $enemy): array;
     abstract function passiveAbility(): array;
 }
