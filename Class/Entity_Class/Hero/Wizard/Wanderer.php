@@ -31,7 +31,7 @@ class Wanderer extends Wizard
     protected const SPECIAL_ABILITY_DESCRIPTION = ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos qui, dolores repellat dolor minus doloremque quis tempore corporis laborum ad veritatis aspernatur commodi debitis obcaecati similique est rerum quidem tempora.';
     protected const SPECIAL_ABILITY_COST = 100;
 
-    
+
     public function specialAbility(Entity $entity): array
     {
         $struckHpBeforeHit = $entity->getHealth();

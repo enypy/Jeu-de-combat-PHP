@@ -46,8 +46,10 @@ class Yamabushi extends Yokai
         $damageBlocked = $damage - $damageAfterBlocking;
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
-        $effectSet = false;
         $hitSuccess = false;
+        $struckCurrentHp = $entity->getHealth();
+        $damageDone = false;
+        $lifesteal = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $finalDamage = $entity->takeDamage($damageAfterBlocking);

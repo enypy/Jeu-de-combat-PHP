@@ -12,4 +12,3 @@ dot
         'disarmed' => 0,
         'distracted' => 0,
         'slowed' => 0,
-gestion des états

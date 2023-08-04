@@ -39,7 +39,7 @@ abstract class Hero extends Entity
 
     public function gainXp(Entity $entity, int $damageReceived): int
     {
-        $xpCalc = ceil($entity->getMaxHp() / 10 + $entity->getEnergy() /5 + $damageReceived / 9);
+        $xpCalc = ceil($entity->getMaxHp() / 10 + $entity->getEnergy() / 5 + $damageReceived / 9);
         $this->xp += $xpCalc;
         return $xpCalc;
     }

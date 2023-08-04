@@ -478,9 +478,7 @@ abstract class Entity
                 switch ($value) {
                     case 'Bleeding':
                         $this->takeDamage(150);
-                        $activeEffects['BleedingLogs'] = [
-                            
-                        ];
+                        $activeEffects['BleedingLogs'] = [];
                         break;
 
                     default:
@@ -590,6 +588,9 @@ abstract class Entity
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
         $hitSuccess = false;
+        $struckCurrentHp = $entity->getHealth();
+        $damageDone = false;
+        $lifesteal = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $finalDamage = $entity->takeDamage($damageAfterBlocking);

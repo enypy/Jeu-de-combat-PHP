@@ -47,6 +47,9 @@ class Kitsune extends Yokai
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
         $hitSuccess = false;
+        $struckCurrentHp = $entity->getHealth();
+        $damageDone = false;
+        $lifesteal = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $finalDamage = $entity->takeDamage($damageAfterBlocking);
