@@ -67,6 +67,8 @@ class Lightning extends Wizard
 
         $hitResult = [
             'actionType' => 'hit',
+            'hitDamageType' => $this->getHitDamageType(),
+            'hitDistance' => $this->getHitDistance(),
             'striker' => $this->getName(),
             'strikerEntityType' => $this->getType(),
             'strikerClass' => $this->getClass(),

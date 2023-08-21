@@ -69,6 +69,8 @@ class Kitsune extends Yokai
 
         $hitResult = [
             'actionType' => 'special ability',
+            'hitDamageType' => $this->getHitDamageType(),
+            'hitDistance' => $this->getHitDistance(),
             'actionName' => $this->getSpecialAbilityName(),
             'striker' => $this->getName(),
             'strikerEntityType' => $this->getType(),
