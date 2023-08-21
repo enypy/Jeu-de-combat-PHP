@@ -29,11 +29,13 @@ abstract class Wizard extends Hero
             'meEnergyLoss' => false,
             'meEnergyGain' => false,
             'meEffect' => false,
+            'meEffectDuration' => false,
             'enemyHeal' => false,
             'enemyDamage' => $finalDamage,
             'enemyEnergyLoss' => false,
             'enemyEnergyGain' => false,
             'enemyEffect' => false,
+            'enemyEffectDuration' => false,
         ];
         return $summary;
     }

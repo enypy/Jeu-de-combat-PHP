@@ -29,12 +29,14 @@ abstract class Boss extends Foe
             'meDamage' => false,
             'meEnergyLoss' => false,
             'meEnergyGain' => false,
+            'meEffectDuration' => false,
             'meEffect' => false,
             'enemyHeal' => false,
             'enemyDamage' => false,
             'enemyEnergyLoss' => false,
             'enemyEnergyGain' => false,
             'enemyEffect' => false,
+            'enemyEffectDuration' => false,
         ];
         return $summary;
     }

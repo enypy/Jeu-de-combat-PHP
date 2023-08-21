@@ -29,12 +29,14 @@ abstract class Ghost extends Foe
             'meDamage' => false,
             'meEnergyLoss' => false,
             'meEnergyGain' => false,
+            'meEffectDuration' => false,
             'meEffect' => false,
             'enemyHeal' => false,
             'enemyDamage' => false,
             'enemyEnergyLoss' => false,
             'enemyEnergyGain' => false,
             'enemyEffect' => $effect,
+            'enemyEffectDuration' => 1,
         ];
         return $summary;
     }

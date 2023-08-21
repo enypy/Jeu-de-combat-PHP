@@ -6,7 +6,7 @@ namespace Class;
 abstract class Entity
 {
 
-    protected int $id;
+    protected int $id = 0;
     protected int $health;
     protected int $maxHealth;
     protected int $energy;
@@ -586,7 +586,7 @@ abstract class Entity
         $damage = $this->calculateDamage($entity, $minDamage, $maxDamage);
         $hitOrMiss = $this->hitOrMiss($entity);
         $damageAfterBlocking = $this->blockDamage($damage);
-        $damageBlocked = $damage - $damageAfterBlocking;
+        $damageBlocked = false;
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
         $struckCurrentHp = $entity->getHealth();
@@ -595,6 +595,7 @@ abstract class Entity
         $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
+            $damageBlocked = $damage - $damageAfterBlocking;
             $finalDamage = $entity->takeDamage($damageAfterBlocking);
             $lifesteal = $this->lifesteal($finalDamage);
             $struckPassiveAbilityTriggered = $entity->triggerWhenStruck($entity, $finalDamage);
@@ -610,6 +611,7 @@ abstract class Entity
             'hitDamageType' => $this->getHitDamageType(),
             'hitDistance' => $this->getHitDistance(),
             'striker' => $this->getName(),
+            'strikerId' => $this->getId(),
             'strikerEntityType' => $this->getType(),
             'strikerClass' => $this->getClass(),
             'strikerSubclass' => $this->getSubclass(),
@@ -620,6 +622,7 @@ abstract class Entity
             'strikerCurrentEnergy' => $this->getEnergy(),
             'strikerPassiveAbility' => $strikerPassiveAbilityTriggered,
             'struck' => $entity->getName(),
+            'struckId' => $entity->getId(),
             'struckEntityType' => $entity->getType(),
             'struckClass' => $entity->getClass(),
             'struckSubclass' => $entity->getSubclass(),

@@ -30,11 +30,13 @@ abstract class Samurai extends Hero
             'meEnergyLoss' => false,
             'meEnergyGain' => false,
             'meEffect' => false,
+            'meEffectDuration' => false,
             'enemyHeal' => false,
             'enemyDamage' => false,
             'enemyEnergyLoss' => false,
             'enemyEnergyGain' => false,
             'enemyEffect' => $effect,
+            'enemyEffectDuration' => 1,
         ];
         return $summary;
     }

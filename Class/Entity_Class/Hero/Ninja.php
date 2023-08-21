@@ -37,11 +37,13 @@ abstract class Ninja extends Hero
             'meEnergyLoss' => false,
             'meEnergyGain' => $meEnergyGain,
             'meEffect' => false,
+            'meEffectDuration' => false,
             'enemyHeal' => false,
             'enemyDamage' => false,
             'enemyEnergyLoss' => $enemyEnergyLoss,
             'enemyEnergyGain' => false,
             'enemyEffect' => false,
+            'enemyEffectDuration' => false,
         ];
         return $summary;
     }
