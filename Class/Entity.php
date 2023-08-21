@@ -587,10 +587,10 @@ abstract class Entity
         $damageBlocked = $damage - $damageAfterBlocking;
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
-        $hitSuccess = false;
         $struckCurrentHp = $entity->getHealth();
         $damageDone = false;
         $lifesteal = false;
+        $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $finalDamage = $entity->takeDamage($damageAfterBlocking);

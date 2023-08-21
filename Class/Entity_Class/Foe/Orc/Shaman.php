@@ -47,6 +47,9 @@ class Shaman extends Orc
         $damageBlocked = $damage - $damageAfterBlocking;
         $strikerPassiveAbilityTriggered = false;
         $struckPassiveAbilityTriggered = false;
+        $struckCurrentHp = $entity->getHealth();
+        $damageDone = false;
+        $lifesteal = false;
         $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {

@@ -49,7 +49,10 @@ class Karasu extends Yokai
         $hitSuccess = false;
         $struckCurrentHp = $entity->getHealth();
         $damageDone = false;
+        $struckCurrentHp = $entity->getHealth();
+        $damageDone = false;
         $lifesteal = false;
+        $hitSuccess = false;
 
         if ($tryLoseEnergy && $hitOrMiss) {
             $finalDamage = $entity->takeDamage($damageAfterBlocking);
