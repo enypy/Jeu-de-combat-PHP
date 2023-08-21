@@ -36,6 +36,8 @@ class Warrior extends Samurai
     {
         $struckHpBeforeHit = $entity->getHealth();
         $strikerHpBeforeHit = $this->getHealth();
+        $strikerEnergyBeforeHit = $this->getEnergy();
+        $struckEnergyBeforeHit = $entity->getEnergy();
         $energyRegen = $this->regenEnergy();
         $hitEnergyCost = $this->getHitCost();
         $tryLoseEnergy = $this->tryLoseEnergy($hitEnergyCost);
@@ -66,17 +68,23 @@ class Warrior extends Samurai
         $hitResult = [
             'actionType' => 'hit',
             'striker' => $this->getName(),
+            'strikerEntityType' => $this->getType(),
             'strikerClass' => $this->getClass(),
             'strikerSubclass' => $this->getSubclass(),
             'strikerHpBeforeHit' => $strikerHpBeforeHit,
             'strikerCurrentHp' => $this->getHealth(),
+            'strikerEnergyBeforeHit' => $strikerEnergyBeforeHit,
             'strikerEnergyRegen' => $energyRegen,
+            'strikerCurrentEnergy' => $this->getEnergy(),
             'strikerPassiveAbility' => $strikerPassiveAbilityTriggered,
             'struck' => $entity->getName(),
+            'struckEntityType' => $entity->getType(),
             'struckClass' => $entity->getClass(),
             'struckSubclass' => $entity->getSubclass(),
             'struckHpBeforeHit' => $struckHpBeforeHit,
             'struckCurrentHp' => $struckCurrentHp,
+            'struckEnergyBeforeHit'=> $struckEnergyBeforeHit,
+            'struckCurrentEnergy' => $entity->getEnergy(),
             'struckPassiveAbility' => $struckPassiveAbilityTriggered,
             'damageDone' => $damageDone,
             'damageBlocked' => $damageBlocked,

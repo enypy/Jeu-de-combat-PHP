@@ -37,6 +37,8 @@ class Karasu extends Yokai
 
         $struckHpBeforeHit = $entity->getHealth();
         $strikerHpBeforeHit = $this->getHealth();
+        $strikerEnergyBeforeHit = $this->getEnergy();
+        $struckEnergyBeforeHit = $entity->getEnergy();
         $energyRegen = $this->regenEnergy();
         $hitEnergyCost = $this->getSpecialAbilityCost();
         $tryLoseEnergy = $this->tryLoseEnergy($hitEnergyCost);
@@ -71,17 +73,23 @@ class Karasu extends Yokai
             'actionType' => 'special ability',
             'actionName' => $this->getSpecialAbilityName(),
             'striker' => $this->getName(),
+            'strikerEntityType' => $this->getType(),
             'strikerClass' => $this->getClass(),
             'strikerSubclass' => $this->getSubclass(),
             'strikerHpBeforeHit' => $strikerHpBeforeHit,
             'strikerCurrentHp' => $this->getHealth(),
+            'strikerEnergyBeforeHit' => $strikerEnergyBeforeHit,
             'strikerEnergyRegen' => $energyRegen,
+            'strikerCurrentEnergy' => $this->getEnergy(),
             'strikerPassiveAbility' => $strikerPassiveAbilityTriggered,
             'struck' => $entity->getName(),
+            'struckEntityType' => $entity->getType(),
             'struckClass' => $entity->getClass(),
             'struckSubclass' => $entity->getSubclass(),
             'struckHpBeforeHit' => $struckHpBeforeHit,
             'struckCurrentHp' => $struckCurrentHp,
+            'struckEnergyBeforeHit'=> $struckEnergyBeforeHit,
+            'struckCurrentEnergy' => $entity->getEnergy(),
             'struckPassiveAbility' => $struckPassiveAbilityTriggered,
             'damageDone' => $damageDone,
             'damageBlocked' => $damageBlocked,
