@@ -9,25 +9,33 @@ use Class\Entity_Class\Hero\Yokai\Karasu;
 use Class\Entity_Class\Hero\Yokai\Kitsune;
 use Class\Entity_Class\Hero\Yokai\Yamabushi;
 
-$hero = new Yamabushi('bruh');
-$foe = new Gotoku('Ghost');
-
-$combatLogs = $hero->hit($foe);
-$combatLogs1 = $foe->hit($hero);
-
-$combatLogs2 = $hero->specialAbility($foe);
-$combatLogs3 = $foe->specialAbility($hero);
+$hero = new Yamabushi('Yamabushi');
+$foe = new Gotoku('Gotoku');
 
 
-echo "<pre>";
-print_r($combatLogs);
-echo "</pre>";
-echo "<pre>";
-print_r($combatLogs1);
-echo "</pre>";
-echo "<pre>";
-print_r($combatLogs2);
-echo "</pre>";
-echo "<pre>";
-print_r($combatLogs3);
-echo "</pre>";
+while ($hero->getHealth() > 0 && $foe->getHealth() > 0) {
+    if ($hero->getSpecialAbilityCost() <= $hero->getEnergy()) {
+        $combatLogs = $hero->specialAbility($foe);
+    } else {
+        $combatLogs = $hero->hit($foe);
+    }
+    echo "<pre>";
+    print_r($combatLogs);
+    echo "</pre>";
+    if ($foe->getSpecialAbilityCost() <= $foe->getEnergy()) {
+        $combatLogs = $foe->specialAbility($hero);
+    } else {
+        $combatLogs = $foe->hit($hero);
+    }
+    echo "<pre>";
+    print_r($combatLogs);
+    echo "</pre>";
+}
+
+if ($hero->getHealth() < 0) {
+    echo "<br>";
+    echo "YOU LOST!";
+} else {
+    echo "<br>";
+    echo "YOU WON!";
+}

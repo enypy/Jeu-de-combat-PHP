@@ -371,7 +371,7 @@ abstract class Entity
     protected function lifesteal(int $damage): int
     {
         $lifeSteal = $this->getLifesteal();
-        $heal = ceil($damage - ($damage * ($lifeSteal / 10) / 100));
+        $heal = ceil($damage * (($lifeSteal / 10) / 100));
         $healed = $this->heal($heal);
 
         return  $healed;
